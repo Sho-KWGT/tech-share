@@ -1,0 +1,19 @@
+{
+  "articles": [
+    {
+      "id": "1",
+      "title": "React Hooksの完全理解",
+      "content": "## useStateとは\n状態を管理するためのフックです。\nuseEffectとは副作用を扱うためのフックです。API通信などで使います。",
+      "author": "Tech Taro",
+      "createdAt": "2026-11-13"
+    },
+    {
+      "id": "2",
+      "title": "Tailwind CSSで爆速コーディング",
+      "content": "Tailwind CSSを使えば、HTML (JSX) から離れることなくスタイリングが完結します。",
+      "author": "Front Engineer",
+      "createdAt": "2026-11-13"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
