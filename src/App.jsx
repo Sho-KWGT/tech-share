@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Layout from './components/templates/Layout';
 import ArticleList from './pages/ArticleList';
 import ArticleDetail from './pages/ArticleDetail';
 import ArticleCreate from './pages/ArticleCreate';
-import ArticleEdit from './pages/ArticleEdit'; // ← 追加
+import ArticleEdit from './pages/ArticleEdit';
 import { useSearch } from './hooks/useSearch';
 
-export default function App() {
+// 未ログイン時にリダイレクトするための保護コンポーネント
+function PrivateRoute({ children }) {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/" replace />;
+}
+
+function MainApp() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +33,7 @@ export default function App() {
       });
   }, []);
 
+  // useSearch フックの戻り値（searchTerm または searchQuery）に合わせて調整してください
   const { searchTerm, setSearchTerm, filteredArticles } = useSearch(articles);
 
   if (loading) return <div className="p-6 text-center">読み込み中...</div>;
@@ -39,18 +47,36 @@ export default function App() {
         />
         <Route
           path="/articles/:id"
-          element={<ArticleDetail />}
+          element={<ArticleDetail articles={articles} setArticles={setArticles} />}
         />
+        {/* 未ログインで /create を開いた場合、PrivateRoute が働いてトップへ戻ります */}
         <Route
           path="/create"
-          element={<ArticleCreate />}
+          element={
+            <PrivateRoute>
+              <ArticleCreate articles={articles} setArticles={setArticles} />
+            </PrivateRoute>
+          }
         />
-        {/* 編集画面のルートを追加 */}
         <Route
           path="/edit/:id"
-          element={<ArticleEdit />}
+          element={
+            <PrivateRoute>
+              <ArticleEdit articles={articles} setArticles={setArticles} />
+            </PrivateRoute>
+          }
         />
       </Routes>
     </Layout>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <MainApp />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
