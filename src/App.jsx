@@ -1,6 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
 import Layout from './components/templates/Layout';
 import ArticleList from './pages/ArticleList';
 import ArticleDetail from './pages/ArticleDetail';
@@ -11,6 +12,7 @@ import { useSearch } from './hooks/useSearch';
 // 未ログイン時にリダイレクトするための保護コンポーネント
 function PrivateRoute({ children }) {
   const { user } = useAuth();
+
   return user ? children : <Navigate to="/" replace />;
 }
 
@@ -33,38 +35,68 @@ function MainApp() {
       });
   }, []);
 
-  // useSearch フックの戻り値（searchTerm または searchQuery）に合わせて調整してください
-  const { searchTerm, setSearchTerm, filteredArticles } = useSearch(articles);
+  const {
+    searchTerm,
+    setSearchTerm,
+    filteredArticles
+  } = useSearch(articles);
 
-  if (loading) return <div className="p-6 text-center">読み込み中...</div>;
+  if (loading) {
+    return (
+      <div className="p-6 text-center">
+        読み込み中...
+      </div>
+    );
+  }
 
   return (
-    <Layout searchTerm={searchTerm} setSearchTerm={setSearchTerm}>
+    <Layout
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+    >
       <Routes>
         <Route
           path="/"
           element={<ArticleList articles={filteredArticles} />}
         />
+
         <Route
           path="/articles/:id"
-          element={<ArticleDetail articles={articles} setArticles={setArticles} />}
+          element={
+            <ArticleDetail
+              articles={articles}
+              setArticles={setArticles}
+            />
+          }
         />
-        {/* 未ログインで /create を開いた場合、PrivateRoute が働いてトップへ戻ります */}
+
         <Route
           path="/create"
           element={
             <PrivateRoute>
-              <ArticleCreate articles={articles} setArticles={setArticles} />
+              <ArticleCreate
+                articles={articles}
+                setArticles={setArticles}
+              />
             </PrivateRoute>
           }
         />
+
         <Route
           path="/edit/:id"
           element={
             <PrivateRoute>
-              <ArticleEdit articles={articles} setArticles={setArticles} />
+              <ArticleEdit
+                articles={articles}
+                setArticles={setArticles}
+              />
             </PrivateRoute>
           }
+        />
+
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
         />
       </Routes>
     </Layout>
@@ -72,11 +104,5 @@ function MainApp() {
 }
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <MainApp />
-      </AuthProvider>
-    </BrowserRouter>
-  );
+  return <MainApp />;
 }
