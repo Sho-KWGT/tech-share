@@ -14,10 +14,10 @@ export default function ArticleList({ articles }) {
           <Link
             key={article.id}
             to={`/articles/${article.id}`}
-            className="block p-5 border rounded-lg shadow-sm bg-white hover:shadow-md hover:border-blue-300 transition"
+            className="block p-6 border-2 border-gray-200 rounded-xl shadow-md bg-white hover:shadow-lg hover:border-blue-400 transition"
           >
-            <h2 className="text-xl font-semibold text-blue-600 mb-1">{article.title}</h2>
-            <p className="text-gray-500 text-sm">投稿者: {article.author} | 作成日: {article.createdAt}</p>
+            <h2 className="text-xl font-bold text-blue-600 mb-2">{article.title}</h2>
+            <p className="text-gray-600 text-sm">投稿者: {article.author} | 作成日: {article.createdAt}</p>
           </Link>
         ))}
       </div>
