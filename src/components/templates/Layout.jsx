@@ -38,7 +38,8 @@ export default function Layout({ children, searchTerm, setSearchTerm }) {
                 >
                   記事を書く
                 </button>
-                <span className="text-sm text-gray-600 font-medium">{user.name}さん</span>
+                {/* 変更箇所：「ようこそ、」を追加しました */}
+                <span className="text-sm text-gray-600 font-medium">ようこそ、{user.name}さん</span>
                 <button
                   onClick={logout}
                   className="px-3 py-1.5 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-100 transition"
