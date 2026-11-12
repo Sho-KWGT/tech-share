@@ -1,16 +1,30 @@
-# React + Vite
+# TechShare
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+技術に関する知識やノウハウを共有するためのWebアプリケーション（SPA）です。
 
-Currently, two official plugins are available:
+## アプリケーション概要
+開発者向けの技術共有プラットフォームとして、記事の投稿、詳細閲覧、編集、削除、検索機能などを実装しています。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 公開URL
+- **フロントエンド（Vercel）**: [https://tech-share-nine.vercel.app/]
+- **バックエンド（Render）**: [https://tech-share-zx7q.onrender.com]
 
-## React Compiler
+## 主な機能
+- **ユーザー認証機能**: 簡易的なログイン・ログアウト機能（Context APIを使用）
+- **記事一覧・検索機能**: 記事の閲覧およびキーワードによるリアルタイム検索（カスタムフック・useMemoを活用）
+- **記事のCRUD操作**: 
+  - 新規作成（Markdownプレビュー機能付き）
+  - 詳細表示・Markdownレンダリング
+  - 編集（本人確認機能付き）
+  - 削除機能
+- **レスポンシブデザイン**: Tailwind CSSを用いたマルチデバイス対応
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 使用技術（Tech Stack）
+- **フロントエンド**: React, React Router, Vite, Tailwind CSS, react-markdown
+- **バックエンド**: Node.js / Express (JSON Serverなど)
+- **デプロイ・ホスティング**: Vercel (Frontend), Render (Backend)
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 工夫した点
+- 記事の投稿・編集・削除を行った際、ページをリロードしなくても即座に一覧や詳細画面のデータが更新されるよう、状態管理とAPIの再取得処理を最適化しました。
+- ログイン中のユーザー本人だけが編集・削除ボタンを行えるように権限チェックを実装しています。
+- Markdown形式での入力とプレビューを同時に確認しながら記事を作成できるようにしました。
