@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../contexts/AuthContext';
 
-export default function ArticleEdit() {
+// 💡 1. props から fetchArticles を受け取るように変更します
+export default function ArticleEdit({ fetchArticles }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -84,6 +85,10 @@ export default function ArticleEdit() {
         return res.json();
       })
       .then(() => {
+        // 💡 2. 更新が成功したら、一覧のデータを再取得する
+        if (fetchArticles) {
+          fetchArticles();
+        }
         navigate(`/articles/${id}`); // 更新後に詳細ページに戻る
       })
       .catch((err) => {

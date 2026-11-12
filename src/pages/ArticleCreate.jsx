@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../contexts/AuthContext';
 
-export default function ArticleCreate() {
+// 💡 1. props から fetchArticles を受け取るようにします
+export default function ArticleCreate({ fetchArticles }) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -54,6 +55,10 @@ export default function ArticleCreate() {
         return res.json();
       })
       .then(() => {
+        // 💡 2. 投稿が成功したら、一覧を再取得してからトップへ戻る
+        if (fetchArticles) {
+          fetchArticles();
+        }
         navigate('/'); // 投稿成功後にトップページへ戻る
       })
       .catch((err) => {

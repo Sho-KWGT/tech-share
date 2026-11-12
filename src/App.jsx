@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import Layout from './components/templates/Layout';
@@ -12,7 +11,6 @@ import { useSearch } from './hooks/useSearch';
 // 未ログイン時にリダイレクトするための保護コンポーネント
 function PrivateRoute({ children }) {
   const { user } = useAuth();
-
   return user ? children : <Navigate to="/" replace />;
 }
 
@@ -20,7 +18,8 @@ function MainApp() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  // 💡 記事一覧を再取得する関数を定義
+  const fetchArticles = useCallback(() => {
     const apiUrl = import.meta.env.VITE_API_URL;
 
     fetch(`${apiUrl}/articles`)
@@ -34,6 +33,11 @@ function MainApp() {
         setLoading(false);
       });
   }, []);
+
+  // 💡 初回ロード時に取得を実行
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
 
   const {
     searchTerm,
@@ -60,12 +64,13 @@ function MainApp() {
           element={<ArticleList articles={filteredArticles} />}
         />
 
+        {/* 💡 fetchArticles を props として渡す */}
         <Route
           path="/articles/:id"
           element={
             <ArticleDetail
               articles={articles}
-              setArticles={setArticles}
+              fetchArticles={fetchArticles}
             />
           }
         />
@@ -75,8 +80,7 @@ function MainApp() {
           element={
             <PrivateRoute>
               <ArticleCreate
-                articles={articles}
-                setArticles={setArticles}
+                fetchArticles={fetchArticles}
               />
             </PrivateRoute>
           }
@@ -87,8 +91,7 @@ function MainApp() {
           element={
             <PrivateRoute>
               <ArticleEdit
-                articles={articles}
-                setArticles={setArticles}
+                fetchArticles={fetchArticles}
               />
             </PrivateRoute>
           }

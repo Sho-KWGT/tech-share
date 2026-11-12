@@ -3,7 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../contexts/AuthContext';
 
-export default function ArticleDetail() {
+// 💡 1. props から fetchArticles を受け取るようにします
+export default function ArticleDetail({ fetchArticles }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -59,7 +60,13 @@ export default function ArticleDetail() {
                 if (window.confirm("本当にこの記事を削除しますか？")) {
                   const apiUrl = import.meta.env.VITE_API_URL;
                   fetch(`${apiUrl}/articles/${article.id}`, { method: 'DELETE' })
-                    .then(() => navigate('/'))
+                    .then(() => {
+                      // 💡 2. 削除が成功したら、一覧のデータを再取得する
+                      if (fetchArticles) {
+                        fetchArticles();
+                      }
+                      navigate('/');
+                    })
                     .catch((err) => console.error("削除に失敗しました", err));
                 }
               }}
